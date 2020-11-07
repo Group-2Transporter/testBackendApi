@@ -11,6 +11,7 @@ public class Transporter {
 	private String address;
 	private String gstNumber = "";
 	private String rating = "";
+	private String token ;
 	private ArrayList<Vehicle> vehicleList;
 
 	public Transporter() {
@@ -18,7 +19,7 @@ public class Transporter {
 	}
 
 	public Transporter(String transporterId, String type, String name, String imageUrl, String contactNumber,
-			String address, String gstNumber, String rating, ArrayList<Vehicle> vehicleList) {
+			String address, String gstNumber, String rating,String token, ArrayList<Vehicle> vehicleList) {
 		super();
 		this.transporterId = transporterId;
 		this.type = type;
@@ -28,7 +29,16 @@ public class Transporter {
 		this.address = address;
 		this.gstNumber = gstNumber;
 		this.rating = rating;
+		this.token = token;
 		this.vehicleList = vehicleList;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	public String getTransporterId() {
