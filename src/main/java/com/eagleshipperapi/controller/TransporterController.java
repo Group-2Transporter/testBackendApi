@@ -31,6 +31,7 @@ public class TransporterController {
 	//create Transporter 
 		@PostMapping("/")
 		public ResponseEntity<Transporter> createNewTransporter(@RequestParam("file")MultipartFile file,
+				@RequestParam("transporterId") String transporterId,
 				@RequestParam("type") String type,
 				@RequestParam("name")String name,
 				@RequestParam("contactNumber")String contactNumber,
@@ -42,6 +43,7 @@ public class TransporterController {
 			if(file.isEmpty())
 				throw new ResourceNotFoundException("image not found.");
 			Transporter transporter = new Transporter();
+			transporter.setTransporterId(transporterId);
 			transporter.setType(type);
 			transporter.setName(name);
 			transporter.setContactNumber(contactNumber);

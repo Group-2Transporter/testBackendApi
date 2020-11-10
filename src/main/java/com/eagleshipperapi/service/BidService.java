@@ -16,6 +16,8 @@ import com.eagleshipperapi.bean.Lead;
 @Service
 public class BidService {
 	Firestore fireStore=FirestoreClient.getFirestore();
+	String TAG = "Bid";
+	
 	public Bid createBid(Bid bid) throws InterruptedException, ExecutionException {
 	    String bidId = fireStore.collection("Bid").document().getId().toString();	
 	    bid.setBidId(bidId);
@@ -46,7 +48,6 @@ public class BidService {
 		   for (QueryDocumentSnapshot document : documents) {
 			   al.add(document.toObject(Bid.class));
 			}
-			
 	  return al;
    }
   
@@ -59,6 +60,6 @@ public class BidService {
 				   al.add(document.toObject(Bid.class));
 				}
 		 return al;
-	  }
-    
+	  }    
+	
 }

@@ -1,4 +1,4 @@
-package com.eagleshipperapi.controller;
+	package com.eagleshipperapi.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +30,7 @@ public class LeadController {
 	// create Lead
 	@PostMapping("/")
 	public ResponseEntity<Lead> createNewLead(@RequestBody Lead lead) {
+		lead.setStatus("create");
 		return new ResponseEntity<Lead>(leadService.createNewLead(lead), org.springframework.http.HttpStatus.OK);
 	}
 
@@ -50,6 +51,43 @@ public class LeadController {
 			return new ResponseEntity<Lead>(lead, org.springframework.http.HttpStatus.OK);
 		else
 			throw new ResourceNotFoundException("Lead not found");
+	}    
+	
+	//get Created Load by userId
+	@GetMapping("/createLead/{userId}")
+	public ResponseEntity<ArrayList<Lead>> getCreatedLeadById(@PathVariable String userId) throws Exception{
+		ArrayList<Lead>al = leadService.getCreatedLeadById(userId);
+		return new ResponseEntity<ArrayList<Lead>>(al, org.springframework.http.HttpStatus.OK);
 	}
+	
+	//get Confirmed Load by userId
+		@GetMapping("/confirmLead/{userId}")
+		public ResponseEntity<ArrayList<Lead>> getConfirmLeadById(@PathVariable String userId) throws Exception{
+			ArrayList<Lead>al = leadService.getConfirmedLeadById(userId);
+			if(al.size()!=0)
+				return new ResponseEntity<ArrayList<Lead>>(al, org.springframework.http.HttpStatus.OK);
+			else
+				throw new ResourceNotFoundException("Confirm Lead not found");
+		}
+		
+	//get Completed Lead by userId	
+		@GetMapping("/completeLead/{userId}")
+		public ResponseEntity<ArrayList<Lead>> getCompleteLeadById(@PathVariable String userId) throws Exception{
+			ArrayList<Lead>al = leadService.getCompletedLeadById(userId);
+			if(al.size()!=0)
+				return new ResponseEntity<ArrayList<Lead>>(al, org.springframework.http.HttpStatus.OK);
+			else
+				throw new ResourceNotFoundException("Confirm Lead not found");
+		}
+		
+	//update Create Load by Id
+		@PostMapping("/update/{leadId}")
+		public ResponseEntity<Lead> updateLeadById(@PathVariable("leadId")String leadId, @RequestBody Lead lead) throws InterruptedException, ExecutionException, ResourceNotFoundException {
+			Lead l = leadService.updateLeadByLeadId(leadId, lead);
+			if(l!=null)
+				return new ResponseEntity<Lead>(l, org.springframework.http.HttpStatus.OK);
+			else
+				throw new ResourceNotFoundException("Lead not found");
+		}
 
 }

@@ -15,6 +15,7 @@ public class Lead {
 	private String vehicleNumber;
 	private String dealLockedWith;
 	private int bidCount;
+	private String transporterName;
 
 	public Lead() {
 
@@ -22,7 +23,7 @@ public class Lead {
 
 	public Lead(String userId, String leadId, String typeOfMaterial, String weight, String pickUpAddress,
 			String deliveryAddress, String contactForPickup, String contactForDelivery, String dateOfCompletion,
-			long timestamp, String status, String vehicleNumber, String dealLockedWith, int bidCount) {
+			long timestamp, String status, String vehicleNumber, String dealLockedWith, int bidCount, String transporterName) {
 		super();
 		this.userId = userId;
 		this.leadId = leadId;
@@ -38,8 +39,9 @@ public class Lead {
 		this.vehicleNumber = vehicleNumber;
 		this.dealLockedWith = dealLockedWith;
 		this.bidCount = bidCount;
+		this.transporterName =transporterName;
 	}
-
+;
 	public String getUserId() {
 		return userId;
 	}
@@ -150,6 +152,12 @@ public class Lead {
 
 	public void setBidCount(int bidCount) {
 		this.bidCount = bidCount;
+	}
+	public String getTransporterName() {
+		return transporterName;
+	}
+	public void setTransporterId(String transporterName) {
+		this.transporterName = transporterName;
 	}
 
 }

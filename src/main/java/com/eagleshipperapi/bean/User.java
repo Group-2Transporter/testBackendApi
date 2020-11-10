@@ -8,6 +8,9 @@ public class User {
 	private String imageUrl;
 	private String token;
 
+	public User() {
+		
+	}
 	public User(String userId, String name, String address, String contactNumber, String imageUrl, String token) {
 		super();
 		this.userId = userId;

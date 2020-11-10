@@ -21,15 +21,14 @@ public class UserService {
 	private static final String TAG = "User";
 	private ArrayList<User> al = new ArrayList<User>();
 	private Firestore dbFirestore = FirestoreClient.getFirestore();
+	
 	//create new user code here
 	public User createUser(MultipartFile file, User user) throws IOException {
 		FileUtility image = new FileUtility();
 	    String imageUrl = image.getImageUrl(file);
 		user.setImageUrl(imageUrl);
 		Firestore fireStore = FirestoreClient.getFirestore();
-		String id = fireStore.collection(TAG).document().getId();
-		user.setUserId(id);
-		fireStore.collection(TAG).document(id).set(user);
+		fireStore.collection(TAG).document(user.getUserId()).set(user);
 		return user;
 	}
 	
