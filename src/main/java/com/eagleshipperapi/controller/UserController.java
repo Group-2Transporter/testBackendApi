@@ -29,11 +29,11 @@ public class UserController {
 	
 	//create user 
 	@PostMapping("/")
-	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file,@RequestParam("name") String name,
+	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file,@RequestParam("userId")String userId,@RequestParam("name") String name,
 			@RequestParam("address")String address,@RequestParam("contactNumber") String contactNumber,@RequestParam("token") String token) throws IOException, ResourceNotFoundException{
 		if(file.isEmpty())
 			throw new ResourceNotFoundException("image not found.");
-		 User user=userService.createUser(file,new User("",name,address,contactNumber,"",token));
+		 User user=userService.createUser(file,new User(userId,name,address,contactNumber,"",token));
 		 return new ResponseEntity<User>(user,org.springframework.http.HttpStatus.OK);
 	}
 	

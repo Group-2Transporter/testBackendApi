@@ -24,6 +24,7 @@ import com.eagleshipperapi.exception.ResourceNotFoundException;
 public class BidController {
 	@Autowired
 	BidService bidService;
+	
 	@PostMapping("/")
 	public ResponseEntity<Bid> createBid(@RequestBody Bid bid) throws ResourceNotFoundException, InterruptedException, ExecutionException{
 		if(bid == null)
