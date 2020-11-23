@@ -31,9 +31,9 @@ public class BidController {
 			throw new ResourceNotFoundException("Bid Not found");
 		return new ResponseEntity<Bid>(bidService.createBid(bid),HttpStatus.OK);
 	}
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Bid> deleteBid(@PathVariable String id) throws ResourceNotFoundException, InterruptedException, ExecutionException{
-		return new ResponseEntity<Bid>(bidService.deleteBid(id),HttpStatus.OK);
+	@DeleteMapping("/{bidId}")
+	public ResponseEntity<Bid> deleteBid(@PathVariable String bidId) throws ResourceNotFoundException, InterruptedException, ExecutionException{
+		return new ResponseEntity<Bid>(bidService.deleteBid(bidId),HttpStatus.OK);
 	}
 
 	@GetMapping("/{leadId}")
@@ -42,11 +42,17 @@ public class BidController {
 	return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
    }
   
-	@GetMapping("/transporter{transporterId}")
+	@GetMapping("/transporter/{transporterId}")
     public ResponseEntity<?> getAllBidsByTransporterId(@PathVariable("transporterId")String id) throws InterruptedException, ExecutionException{
 	ArrayList<Bid>al=bidService.getAllBidsByTransporterId(id);
 	return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
    }
 
+	//get Pending bids
+	@GetMapping("/transporter/pending/{transporterId}")
+    public ResponseEntity<?> getAllPendingBidsByTransporterId(@PathVariable("transporterId")String transporterId) throws InterruptedException, ExecutionException{
+	ArrayList<Bid>al=bidService.getAllBidsByTransporterIdPending(transporterId);
+	return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
+    }
 
 }

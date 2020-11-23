@@ -8,6 +8,14 @@ public class Bid {
 	private int amount;
 	private String remark;
 	private String estimatedDate;
+	private String materialType;
+	public String getMaterialType() {
+		return materialType;
+	}
+
+	public void setMaterialType(String materialType) {
+		this.materialType = materialType;
+	}
 
 	public Bid() {
 	}

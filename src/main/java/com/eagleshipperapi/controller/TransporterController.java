@@ -63,9 +63,9 @@ public class TransporterController {
 		}
 		
 	//get Single Transporter by id
-		@GetMapping("/{id}")
-		public ResponseEntity<Transporter> getTransporter(@PathVariable String id) throws InterruptedException, ExecutionException, ResourceNotFoundException{
-			Transporter t = transporterService.getTransporter(id);
+		@GetMapping("/{transporterId}")
+		public ResponseEntity<Transporter> getTransporter(@PathVariable String transporterId) throws InterruptedException, ExecutionException, ResourceNotFoundException{
+			Transporter t = transporterService.getTransporter(transporterId);
 			if(t==null)
 				throw new ResourceNotFoundException("Transporter not exists");
 			return new ResponseEntity<Transporter>(t,HttpStatus.OK);
@@ -91,12 +91,14 @@ public class TransporterController {
 		}
 		
 		//update Transporter image
-				@PostMapping("/update/image")
-				public ResponseEntity<Transporter> updateTransporter(@RequestParam("transporterId") String transporterId,@RequestParam("file")MultipartFile file) throws ResourceNotFoundException, IOException, InterruptedException, ExecutionException {
-					
-					Transporter t = transporterService.updateTransporter(transporterId, file);
-					if(t==null)
-						throw new ResourceNotFoundException("Transporter not exists");
-					return new ResponseEntity<Transporter>(t,HttpStatus.OK);
-				}
+			@PostMapping("/update/image")
+			public ResponseEntity<Transporter> updateTransporter(@RequestParam("file")MultipartFile file,@RequestParam("transporterId") String transporterId) throws ResourceNotFoundException, IOException, InterruptedException, ExecutionException {
+				
+				Transporter t = transporterService.updateTransporter(transporterId, file);
+				if(t==null)
+					throw new ResourceNotFoundException("Transporter not exists");
+				return new ResponseEntity<Transporter>(t,HttpStatus.OK);
+			}
+				
+
 }
