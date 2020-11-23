@@ -60,6 +60,18 @@ public class BidService {
 				   al.add(document.toObject(Bid.class));
 				}
 		 return al;
-	  }    
+	  }   
+	
+	//get Pending bids by transporterId
+	public ArrayList<Bid>getAllBidsByTransporterIdPending(String transporterId) throws InterruptedException, ExecutionException{
+		  ArrayList<Bid>al=new ArrayList<Bid>();
+		  List<QueryDocumentSnapshot>documents =fireStore.collection("Bid").whereEqualTo("transporterId",transporterId).get().get().getDocuments();
+			for (QueryDocumentSnapshot document : documents) {
+				Bid bid = document.toObject(Bid.class);
+				al.add(bid);
+			}
+		 return al;
+	  }
+	
 	
 }

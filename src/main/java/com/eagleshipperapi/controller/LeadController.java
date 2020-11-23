@@ -2,6 +2,7 @@
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eagleshipperapi.bean.Lead;
+import com.eagleshipperapi.bean.State;
 import com.eagleshipperapi.bean.User;
 import com.eagleshipperapi.exception.ResourceNotFoundException;
 import com.eagleshipperapi.service.LeadService;
@@ -34,7 +36,7 @@ public class LeadController {
 		return new ResponseEntity<Lead>(leadService.createNewLead(lead), org.springframework.http.HttpStatus.OK);
 	}
 
-	// get All Lead
+	// get All of single user Lead
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<ArrayList<Lead>> getLeadByUserId(@PathVariable String userId)
 			throws InterruptedException, ExecutionException {
@@ -43,10 +45,10 @@ public class LeadController {
 	}
 
 	// get Single lead by ID
-	@GetMapping("/{id}")
-	public ResponseEntity<Lead> getLead(@PathVariable String id)
+	@GetMapping("/{leadId}")
+	public ResponseEntity<Lead> getLead(@PathVariable String leadId)
 			throws InterruptedException, ExecutionException, ResourceNotFoundException {
-		Lead lead = leadService.getLeadByLeadId(id);
+		Lead lead = leadService.getLeadByLeadId(leadId);
 		if (lead != null)
 			return new ResponseEntity<Lead>(lead, org.springframework.http.HttpStatus.OK);
 		else
@@ -80,6 +82,27 @@ public class LeadController {
 				throw new ResourceNotFoundException("Confirm Lead not found");
 		}
 		
+	//get All Completed Leads by TransporterId	
+		@GetMapping("/completedLead/transporterId/{transporterId}")
+		public ResponseEntity<ArrayList<Lead>> getCompleteLeadByTransporterID(@PathVariable String transporterId) throws Exception{
+			ArrayList<Lead>al = leadService.getCompletedLeadByTransporterId(transporterId);
+			if(al.size()!=0)
+				return new ResponseEntity<ArrayList<Lead>>(al, org.springframework.http.HttpStatus.OK);
+			else
+				throw new ResourceNotFoundException("Confirm Lead not found");
+		}
+		
+	//get All Confirmed Leads By Transporter Id
+		@GetMapping("/leadByTransporterId/{transporterId}")
+		public ResponseEntity<ArrayList<Lead>> getCurrentLoadOfTransporter(@PathVariable String transporterId) throws Exception{
+			ArrayList<Lead>al = leadService.getAllConfirmedLeadsOfUser(transporterId);
+			if(al.size()!=0)
+				return new ResponseEntity<ArrayList<Lead>>(al, org.springframework.http.HttpStatus.OK);
+			else
+				throw new ResourceNotFoundException("Confirm Lead not found");
+		}
+		
+		
 	//update Create Load by Id
 		@PostMapping("/update/{leadId}")
 		public ResponseEntity<Lead> updateLeadById(@PathVariable("leadId")String leadId, @RequestBody Lead lead) throws InterruptedException, ExecutionException, ResourceNotFoundException {
@@ -88,6 +111,28 @@ public class LeadController {
 				return new ResponseEntity<Lead>(l, org.springframework.http.HttpStatus.OK);
 			else
 				throw new ResourceNotFoundException("Lead not found");
+		}
+		
+		
+		
+	//get Filter load 
+		@PostMapping("/filter/{transporterId}")
+		public ResponseEntity<ArrayList<Lead>> getFilterdLoads(@PathVariable("transporterId")String transporterId , @RequestBody ArrayList<State> stateList) throws InterruptedException, ExecutionException, ResourceNotFoundException {
+			ArrayList<Lead> al = leadService.getFilteredLeads(transporterId,stateList);
+			if(al.size() != 0)
+				return new ResponseEntity<ArrayList<Lead>>(al, org.springframework.http.HttpStatus.OK);
+			else
+				throw new ResourceNotFoundException("Match Result not found");
+		}
+		
+	//get All created Load	
+		@GetMapping("/filter/all/{transporterId}")
+		public ResponseEntity<ArrayList<Lead>> getCreatedLoads(@PathVariable("transporterId")String transporterId) throws InterruptedException, ExecutionException, ResourceNotFoundException {
+			ArrayList<Lead> al = leadService.getCreatedLeads(transporterId);
+			if(al.size() != 0)
+				return new ResponseEntity<ArrayList<Lead>>(al, org.springframework.http.HttpStatus.OK);
+			else
+				throw new ResourceNotFoundException("Match Result not found");
 		}
 
 }

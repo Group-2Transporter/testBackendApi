@@ -43,8 +43,10 @@ public class VehicleService {
 				if(v.getVehicelId().equals(vehicleId)) {
 					vehicle  = v;
 					vehicleList.remove(v);
+					break;
 				}
 			}
+			t.setVehicleList(vehicleList);
 			firestore.collection("Transporter").document(transporterId).set(t);
 			return vehicle;
 	}

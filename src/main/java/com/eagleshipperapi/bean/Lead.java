@@ -12,10 +12,13 @@ public class Lead {
 	private String dateOfCompletion;
 	private long timestamp;
 	private String status;
-	private String vehicleNumber;
+	private String materialStatus;
 	private String dealLockedWith;
 	private int bidCount;
 	private String transporterName;
+	private String userName;
+	private double amount;
+	private String remark;
 
 	public Lead() {
 
@@ -23,8 +26,10 @@ public class Lead {
 
 	public Lead(String userId, String leadId, String typeOfMaterial, String weight, String pickUpAddress,
 			String deliveryAddress, String contactForPickup, String contactForDelivery, String dateOfCompletion,
-			long timestamp, String status, String vehicleNumber, String dealLockedWith, int bidCount, String transporterName) {
+			long timestamp, String status, String materialStatus, String dealLockedWith, int bidCount, String transporterName,String userName,double amount,String remark) {
 		super();
+		this.amount = amount;
+		this.remark = remark;
 		this.userId = userId;
 		this.leadId = leadId;
 		this.typeOfMaterial = typeOfMaterial;
@@ -36,12 +41,41 @@ public class Lead {
 		this.dateOfCompletion = dateOfCompletion;
 		this.timestamp = timestamp;
 		this.status = status;
-		this.vehicleNumber = vehicleNumber;
+		this.materialStatus = materialStatus;
 		this.dealLockedWith = dealLockedWith;
 		this.bidCount = bidCount;
 		this.transporterName =transporterName;
+		this.userName = userName;
 	}
 ;
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setTransporterName(String transporterName) {
+		this.transporterName = transporterName;
+	}
+
 	public String getUserId() {
 		return userId;
 	}
@@ -130,12 +164,12 @@ public class Lead {
 		this.status = status;
 	}
 
-	public String getVehicleNumber() {
-		return vehicleNumber;
+	public String getMaterialStatus() {
+		return materialStatus;
 	}
 
-	public void setVehicleNumber(String vehicleNumber) {
-		this.vehicleNumber = vehicleNumber;
+	public void setMaterialStatus(String materialStatus) {
+		this.materialStatus = materialStatus;
 	}
 
 	public String getDealLockedWith() {

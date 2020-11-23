@@ -2,6 +2,7 @@ package com.eagleshipperapi.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -42,9 +43,7 @@ public class TransporterService {
 			
 		String imageUrl = new FileUtility().getImageUrl(file);
 		transporter.setImageUrl(imageUrl);
-		String id = fireStore.collection(TAG).document().getId();
-		transporter.setTransporterId(id);
-		fireStore.collection(TAG).document(id).set(transporter);
+		fireStore.collection(TAG).document(transporter.getTransporterId()).set(transporter);
 		return transporter;
 	}
 	
@@ -70,5 +69,6 @@ public class TransporterService {
 			fireStore.collection(TAG).document(transporterId).set(t);
 			return t;
 		}
+		
 	
 }
