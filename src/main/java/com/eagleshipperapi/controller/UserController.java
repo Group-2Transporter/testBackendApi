@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.eagleshipperapi.bean.Token;
 import com.eagleshipperapi.bean.User;
 import com.eagleshipperapi.exception.ResourceNotFoundException;
 import com.eagleshipperapi.service.UserService;
@@ -29,8 +31,12 @@ public class UserController {
 	
 	//create user 
 	@PostMapping("/")
-	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file,@RequestParam("userId")String userId,@RequestParam("name") String name,
-			@RequestParam("address")String address,@RequestParam("contactNumber") String contactNumber,@RequestParam("token") String token) throws IOException, ResourceNotFoundException{
+	public ResponseEntity<User> createNewUser(@RequestParam("file") MultipartFile file,
+			@RequestParam("userId")String userId,
+			@RequestParam("name") String name,
+			@RequestParam("address")String address,
+			@RequestParam("contactNumber") String contactNumber,
+			@RequestParam("token") String token) throws IOException, ResourceNotFoundException{
 		if(file.isEmpty())
 			throw new ResourceNotFoundException("image not found.");
 		 User user=userService.createUser(file,new User(userId,name,address,contactNumber,"",token));
@@ -74,7 +80,7 @@ public class UserController {
 	
 	//update  image
 		@PostMapping("/update/image")
-		public ResponseEntity<User> updateUser(@RequestParam("file")MultipartFile file,@RequestParam("userId")String userId) throws InterruptedException, ExecutionException, ResourceNotFoundException, IOException{
+		public ResponseEntity<User> updateUser(@RequestParam("file")MultipartFile file,@RequestParam("userId") String userId) throws InterruptedException, ExecutionException, ResourceNotFoundException, IOException{
 			User u = userService.updateUserById(file, userId);
 			if(u == null)
 				throw new ResourceNotFoundException("User not Found");
@@ -82,4 +88,15 @@ public class UserController {
 		}
 	
 	
+	//get Token Of All Transporter
+		@GetMapping("/token")
+		public ResponseEntity<ArrayList<Token>> getTokenTransporters() throws InterruptedException, ExecutionException, IOException, ResourceNotFoundException{
+			
+			ArrayList<Token> al = userService.getTokens();
+			if(al.size() != 0)
+				return new ResponseEntity<>(al, HttpStatus.OK);
+			else
+				throw new ResourceNotFoundException("No Transporter Found");
+		}
+		
 }
