@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eagleshipperapi.FileUtility;
+import com.eagleshipperapi.bean.Token;
+import com.eagleshipperapi.bean.Transporter;
 import com.eagleshipperapi.bean.User;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
@@ -27,8 +29,7 @@ public class UserService {
 		FileUtility image = new FileUtility();
 	    String imageUrl = image.getImageUrl(file);
 		user.setImageUrl(imageUrl);
-		Firestore fireStore = FirestoreClient.getFirestore();
-		fireStore.collection(TAG).document(user.getUserId()).set(user);
+		dbFirestore.collection(TAG).document(user.getUserId()).set(user);
 		return user;
 	}
 	
@@ -70,6 +71,19 @@ public class UserService {
 		user.setImageUrl(imageUrl);
 		dbFirestore.collection(TAG).document(userId).set(user);
 		return user;
+	}
+	
+	//get Token of Transporter
+	public ArrayList<Token> getTokens() throws InterruptedException, ExecutionException, IOException {
+		ArrayList<Token> tokenList = new ArrayList<>();
+		List<QueryDocumentSnapshot> document =  dbFirestore.collection("Transporter").get().get().getDocuments();
+		for(QueryDocumentSnapshot ds : document) {
+			Transporter t = ds.toObject(Transporter.class);
+			Token token = new Token();
+			token.setToken(t.getToken());
+			tokenList.add(token);
+		}
+		return tokenList;
 	}
 	
 }
