@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -133,6 +134,15 @@ public class LeadController {
 				return new ResponseEntity<ArrayList<Lead>>(al, org.springframework.http.HttpStatus.OK);
 			else
 				throw new ResourceNotFoundException("Match Result not found");
+		}
+		
+		@DeleteMapping("/{leadId}")
+		public ResponseEntity<Lead> deleteLeadById(@PathVariable("leadId")String leadId) throws InterruptedException, ExecutionException, ResourceNotFoundException {
+			Lead l = leadService.deleteLeadByLeadId(leadId);
+			if(l!=null)
+				return new ResponseEntity<Lead>(l, org.springframework.http.HttpStatus.OK);
+			else
+				throw new ResourceNotFoundException("Lead not found");
 		}
 
 }

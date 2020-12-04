@@ -208,5 +208,12 @@ public class LeadService {
 		return al;
 	}
 		
+	//delete lead by leadId
+		public Lead deleteLeadByLeadId(String leadId) throws InterruptedException, ExecutionException, ResourceNotFoundException {
+			Lead lead =  dbFirestore.collection(TAG).document(leadId).get().get().toObject(Lead.class);
+			dbFirestore.collection(TAG).document(leadId).delete();
+		    return lead;
+		}
+		
 
 }
