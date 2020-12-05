@@ -73,5 +73,16 @@ public class BidService {
 		 return al;
 	  }
 	
+	//delete all bid by lead Id
+	public ArrayList<Bid> deleteBidsOfLead(String leadId) throws InterruptedException, ExecutionException{
+		  ArrayList<Bid>al=new ArrayList<Bid>();
+		  List<QueryDocumentSnapshot>documents =fireStore.collection("Bid").whereEqualTo("leadId",leadId).get().get().getDocuments();
+			for (QueryDocumentSnapshot document : documents) {
+				Bid bid = document.toObject(Bid.class);
+				al.add(bid);
+				fireStore.collection(TAG).document(bid.getBidId()).delete();
+			}
+		 return al;
+	  }
 	
 }

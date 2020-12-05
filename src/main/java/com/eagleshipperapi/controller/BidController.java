@@ -55,4 +55,10 @@ public class BidController {
 	return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
     }
 
+	@DeleteMapping("/allbids/{leadId}")
+	
+	public ResponseEntity<?> deleteAllBidsByLeadId(@PathVariable("leadId")String leadId) throws InterruptedException, ExecutionException{
+		ArrayList<Bid>al=bidService.deleteBidsOfLead(leadId);
+		return new ResponseEntity<ArrayList<Bid>>(al,HttpStatus.OK);
+	   }
 }
