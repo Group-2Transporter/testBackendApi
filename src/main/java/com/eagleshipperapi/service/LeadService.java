@@ -1,7 +1,14 @@
 package com.eagleshipperapi.service;
 
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -10,11 +17,13 @@ import org.springframework.stereotype.Service;
 import com.eagleshipperapi.bean.Bid;
 import com.eagleshipperapi.bean.Lead;
 import com.eagleshipperapi.bean.State;
+import com.eagleshipperapi.bean.States;
 import com.eagleshipperapi.bean.User;
 import com.eagleshipperapi.exception.ResourceNotFoundException;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query.Direction;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
@@ -41,6 +50,7 @@ public class LeadService {
 			for(QueryDocumentSnapshot queryDocument : document ) {
 				al.add(queryDocument.toObject(Lead.class));
 			}
+			Collections.sort(al,new Lead());
 			return al;		
 		}
 	//get single lead by id
@@ -58,6 +68,7 @@ public class LeadService {
 				if(lead.getStatus().equalsIgnoreCase("create"))
 					al.add(lead);
 			}
+			Collections.sort(al,new Lead());
 			return al;
 		}
 		
@@ -70,6 +81,7 @@ public class LeadService {
 				if(lead.getStatus().equalsIgnoreCase("confirmed"))
 					al.add(lead);
 			}
+			Collections.sort(al,new Lead());
 			return al;
 		}
 		
@@ -82,6 +94,7 @@ public class LeadService {
 				if(lead.getStatus().equalsIgnoreCase("completed"))
 					al.add(lead);
 			}
+			Collections.sort(al,new Lead());
 			return al;
 		}
 		
@@ -94,6 +107,7 @@ public class LeadService {
 				if(lead.getStatus().equalsIgnoreCase("completed"))
 					al.add(lead);
 			}
+			Collections.sort(al,new Lead());
 			return al;
 		}
 	
@@ -106,6 +120,7 @@ public class LeadService {
 				if(lead.getStatus().equalsIgnoreCase("confirmed"))
 					leadList.add(lead);
 			}
+			Collections.sort(leadList,new Lead());
 			return leadList;	
 		}
 		
@@ -156,15 +171,15 @@ public class LeadService {
 		
 		
 		//get Filterd data
-		public ArrayList<Lead> getFilteredLeads(String transporterId ,ArrayList<State> stateList) throws InterruptedException, ExecutionException{
+		public ArrayList<Lead> getFilteredLeads(String transporterId ,ArrayList<States> stateList) throws InterruptedException, ExecutionException{
 			ArrayList<Lead> al = new ArrayList<>();
 			boolean status = false;
 			List<QueryDocumentSnapshot> query = dbFirestore.collection(TAG).get().get().getDocuments();
-			for(State s : stateList) {
+			for(States s : stateList) {
 				for(QueryDocumentSnapshot ds : query) {
 					Lead lead = ds.toObject(Lead.class);
 					String[] pickup = lead.getPickUpAddress().split(",");
-					if(pickup[2].equalsIgnoreCase(s.getStateList())) {
+					if(pickup[2].equalsIgnoreCase(s.getStateName())) {
 						if(lead.getStatus().equalsIgnoreCase("create")) {
 							List<QueryDocumentSnapshot> bidQuery = dbFirestore.collection("Bid").whereEqualTo("leadId",lead.getLeadId()).get().get().getDocuments();
 							for(QueryDocumentSnapshot bs : bidQuery) {
@@ -182,6 +197,7 @@ public class LeadService {
 					}
 				}
 			}
+			Collections.sort(al,new Lead());
 			return al;
 		}
 		
@@ -192,19 +208,36 @@ public class LeadService {
 		List<QueryDocumentSnapshot> query = dbFirestore.collection(TAG).whereEqualTo("status","create").get().get().getDocuments();
 		for(QueryDocumentSnapshot ds : query) {
 			Lead lead = ds.toObject(Lead.class);
-			List<QueryDocumentSnapshot> bidQuery = dbFirestore.collection("Bid").whereEqualTo("leadId",lead.getLeadId()).get().get().getDocuments();
-			for(QueryDocumentSnapshot bs : bidQuery) {
-				Bid bid = bs.toObject(Bid.class);
-				if(bid.getTransporterId().equals(transporterId)) {
-					status = true;
-					break;
+			long t = Calendar.getInstance().getTimeInMillis();
+			
+			String str_date = lead.getDateOfCompletion().replace('/', '-');
+			DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			try {
+				Date date = (Date)formatter.parse(str_date);
+				if(lead.getTimestamp() <= date.getTime()) {
+					dbFirestore.collection(TAG).document(lead.getLeadId()).delete();				
 				}
-			}
-			if(!status) {
-				al.add(lead);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			if(lead!=null) {
+				List<QueryDocumentSnapshot> bidQuery = dbFirestore.collection("Bid").whereEqualTo("leadId",lead.getLeadId()).get().get().getDocuments();
+				for(QueryDocumentSnapshot bs : bidQuery) {
+					Bid bid = bs.toObject(Bid.class);
+					if(bid.getTransporterId().equals(transporterId)) {
+						status = true;
+						break;
+					}
+				}
+				if(!status) {
+					al.add(lead);
+				}
 			}
 			status = false;
 		}
+		
+		Collections.sort(al,new Lead());
 		return al;
 	}
 		

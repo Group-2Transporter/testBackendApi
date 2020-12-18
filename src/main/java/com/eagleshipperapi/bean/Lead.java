@@ -1,6 +1,15 @@
 package com.eagleshipperapi.bean;
 
-public class Lead {
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+
+import com.google.firebase.cloud.FirestoreClient;
+
+public class Lead implements Comparator<Lead>{
 	private String userId;
 	private String leadId;
 	private String typeOfMaterial;
@@ -194,4 +203,27 @@ public class Lead {
 		this.transporterName = transporterName;
 	}
 
+	@Override
+	public int compare(Lead o1, Lead o2) {
+		long t = Calendar.getInstance().getTimeInMillis();
+		
+		String str_date = o1.getDateOfCompletion().replace('/', '-');
+		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		try {
+			Date date = (Date)formatter.parse(str_date);
+			if(o1.getTimestamp() >= date.getTime()) {
+				FirestoreClient.getFirestore().collection("Lead").document(o1.getLeadId()).delete();				
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		long result = o1.getTimestamp()-o2.getTimestamp();
+		
+		if(result == 0) {
+			return 1;
+		}else {
+			return -1;
+		}
+	}
 }
