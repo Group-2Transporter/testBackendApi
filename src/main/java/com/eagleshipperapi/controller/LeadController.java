@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.eagleshipperapi.bean.Lead;
 import com.eagleshipperapi.bean.State;
+import com.eagleshipperapi.bean.States;
 import com.eagleshipperapi.bean.User;
 import com.eagleshipperapi.exception.ResourceNotFoundException;
 import com.eagleshipperapi.service.LeadService;
@@ -120,7 +121,7 @@ public class LeadController {
 		
 	//get Filter load 
 		@PostMapping("/filter/{transporterId}")
-		public ResponseEntity<ArrayList<Lead>> getFilterdLoads(@PathVariable("transporterId")String transporterId , @RequestBody ArrayList<State> stateList) throws InterruptedException, ExecutionException, ResourceNotFoundException {
+		public ResponseEntity<ArrayList<Lead>> getFilterdLoads(@PathVariable("transporterId")String transporterId , @RequestBody ArrayList<States> stateList) throws InterruptedException, ExecutionException, ResourceNotFoundException {
 			ArrayList<Lead> al = leadService.getFilteredLeads(transporterId,stateList);
 			if(al.size() != 0)
 				return new ResponseEntity<ArrayList<Lead>>(al, org.springframework.http.HttpStatus.OK);
@@ -147,6 +148,5 @@ public class LeadController {
 			else
 				throw new ResourceNotFoundException("Lead not found");
 		}
-		
 
 }
