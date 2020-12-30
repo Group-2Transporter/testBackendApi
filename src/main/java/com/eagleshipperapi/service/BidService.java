@@ -15,11 +15,12 @@ import com.eagleshipperapi.bean.Bid;
 import com.eagleshipperapi.bean.Lead;
 @Service
 public class BidService {
-	Firestore fireStore=FirestoreClient.getFirestore();
+	
 	String TAG = "Bid";
 	
 	public Bid createBid(Bid bid) throws InterruptedException, ExecutionException {
-	    String bidId = fireStore.collection("Bid").document().getId().toString();	
+		Firestore fireStore=FirestoreClient.getFirestore();
+		String bidId = fireStore.collection("Bid").document().getId().toString();	
 	    bid.setBidId(bidId);
 	    fireStore.collection("Bid").document(bidId).set(bid);
 	    Lead lead = fireStore.collection("Lead").document(bid.getLeadId()).get().get().toObject(Lead.class);
@@ -31,6 +32,7 @@ public class BidService {
 	}
 	
 	public Bid deleteBid(String bidId) throws InterruptedException, ExecutionException {
+		Firestore fireStore=FirestoreClient.getFirestore();
 		  Bid bid = fireStore.collection("Bid").document(bidId).get().get().toObject(Bid.class);
 		  fireStore.collection("Bid").document(bidId).delete();
 		  Lead lead = fireStore.collection("Lead").document(bid.getLeadId()).get().get().toObject(Lead.class);
@@ -41,7 +43,8 @@ public class BidService {
 	 }
   
 	public ArrayList<Bid>getAllBidsByLeadId(String id) throws InterruptedException, ExecutionException{
-		 ArrayList<Bid>al=new ArrayList<Bid>();
+		Firestore fireStore=FirestoreClient.getFirestore(); 
+		ArrayList<Bid>al=new ArrayList<Bid>();
 		 ApiFuture<QuerySnapshot> future=fireStore.collection("Bid").whereEqualTo("leadId",id).get();
 		 List<QueryDocumentSnapshot>documents; 
 		 documents = future.get().getDocuments();
@@ -52,7 +55,8 @@ public class BidService {
    }
   
 	public ArrayList<Bid>getAllBidsByTransporterId(String id) throws InterruptedException, ExecutionException{
-		  ArrayList<Bid>al=new ArrayList<Bid>();
+		Firestore fireStore=FirestoreClient.getFirestore();  
+		ArrayList<Bid>al=new ArrayList<Bid>();
 		  ApiFuture<QuerySnapshot> future=fireStore.collection("Bid").whereEqualTo("transporterId",id).get();
 		  List<QueryDocumentSnapshot>documents;
 		  documents = future.get().getDocuments();
@@ -64,7 +68,8 @@ public class BidService {
 	
 	//get Pending bids by transporterId
 	public ArrayList<Bid>getAllBidsByTransporterIdPending(String transporterId) throws InterruptedException, ExecutionException{
-		  ArrayList<Bid>al=new ArrayList<Bid>();
+		Firestore fireStore=FirestoreClient.getFirestore();  
+		ArrayList<Bid>al=new ArrayList<Bid>();
 		  List<QueryDocumentSnapshot>documents =fireStore.collection("Bid").whereEqualTo("transporterId",transporterId).get().get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
 				Bid bid = document.toObject(Bid.class);
@@ -75,7 +80,8 @@ public class BidService {
 	
 	//delete all bid by lead Id
 	public ArrayList<Bid> deleteBidsOfLead(String leadId) throws InterruptedException, ExecutionException{
-		  ArrayList<Bid>al=new ArrayList<Bid>();
+		Firestore fireStore=FirestoreClient.getFirestore();  
+		ArrayList<Bid>al=new ArrayList<Bid>();
 		  List<QueryDocumentSnapshot>documents =fireStore.collection("Bid").whereEqualTo("leadId",leadId).get().get().getDocuments();
 			for (QueryDocumentSnapshot document : documents) {
 				Bid bid = document.toObject(Bid.class);

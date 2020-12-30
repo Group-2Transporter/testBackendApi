@@ -17,9 +17,9 @@ import com.google.firebase.cloud.FirestoreClient;
 @Service
 public class StateService {
 	
-	Firestore fireStore = FirestoreClient.getFirestore();
+	
 	public ArrayList<States> getStateList() throws InterruptedException, ExecutionException {
-		
+		Firestore fireStore = FirestoreClient.getFirestore();	
 		ArrayList<States> al = new ArrayList<>();
 		ApiFuture<QuerySnapshot> apiFuture = fireStore.collection("State").get();
 		QuerySnapshot querySnapshot = apiFuture.get();
@@ -32,11 +32,12 @@ public class StateService {
 	}
     
 	public States saveState(States s) throws Exception {
+		Firestore fireStore = FirestoreClient.getFirestore();
 		fireStore.collection("State").document(s.getStateId()).set(s);
 		return s;
 	}
 	  public States getStateById(String stateId) throws InterruptedException, ExecutionException, ResourceNotFoundException {
-		  
+		  Firestore fireStore = FirestoreClient.getFirestore();
 		  States state = fireStore.collection("State").document(stateId).get().get().toObject(States.class);
 	      if (state!= null) 
 	    	  return state;

@@ -16,10 +16,11 @@ import com.google.firebase.cloud.FirestoreClient;
 @Service
 public class VehicleService {
 
-	Firestore firestore = FirestoreClient.getFirestore();
 	
 	//create new vehicle
 	public Vehicle createVehicle(MultipartFile file,Vehicle vehicle,String id) throws IOException, InterruptedException, ExecutionException {
+		Firestore firestore = FirestoreClient.getFirestore();
+		
 		String imageUrl = new FileUtility().getImageUrl(file);
 		String vehicelId = firestore.collection("Transporter").document().getId();
 		vehicle.setVehicelId(vehicelId);
@@ -36,7 +37,9 @@ public class VehicleService {
 	
 	//delete vehicle
 	public Vehicle deleteVehicle(String vehicleId,String transporterId) throws InterruptedException, ExecutionException, ResourceNotFoundException {	
-			Transporter t = firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
+		Firestore firestore = FirestoreClient.getFirestore();
+			
+		Transporter t = firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
 			Vehicle vehicle = null;
 			ArrayList<Vehicle> vehicleList = t.getVehicleList();
 			for(Vehicle v : vehicleList) {
@@ -54,7 +57,9 @@ public class VehicleService {
 	
 	//update vehicle
 	public Vehicle updateVehicle(String transporterId,Vehicle vehi) throws InterruptedException, ExecutionException, ResourceNotFoundException, IOException {
-			Transporter t = firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
+		Firestore firestore = FirestoreClient.getFirestore();
+			
+		Transporter t = firestore.collection("Transporter").document(transporterId).get().get().toObject(Transporter.class);
 			ArrayList<Vehicle> vehicleList = t.getVehicleList();
 			int i =0;
 			for(Vehicle v : vehicleList) {
