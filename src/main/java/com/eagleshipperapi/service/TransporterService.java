@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eagleshipperapi.FileUtility;
+import com.eagleshipperapi.bean.Rating;
 import com.eagleshipperapi.bean.Transporter;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
@@ -66,14 +67,47 @@ public class TransporterService {
 	}
 	
 	//update transporter image
-		public Transporter updateTransporter(String transporterId,MultipartFile file) throws IOException, InterruptedException, ExecutionException {
-			Firestore fireStore = FirestoreClient.getFirestore();
-			Transporter t = fireStore.collection(TAG).document(transporterId).get().get().toObject(Transporter.class);
-			String imageUrl =  new FileUtility().getImageUrl(file);
-			t.setImageUrl(imageUrl);
-			fireStore.collection(TAG).document(transporterId).set(t);
-			return t;
+	public Transporter updateTransporter(String transporterId,MultipartFile file) throws IOException, InterruptedException, ExecutionException {
+		Firestore fireStore = FirestoreClient.getFirestore();
+		Transporter t = fireStore.collection(TAG).document(transporterId).get().get().toObject(Transporter.class);
+		String imageUrl =  new FileUtility().getImageUrl(file);
+		t.setImageUrl(imageUrl);
+		fireStore.collection(TAG).document(transporterId).set(t);
+		return t;
+	}
+	
+	//create rating
+	public Rating createRating(String transporterId,String leadId,Rating rating) {
+		Firestore fireStore = FirestoreClient.getFirestore();
+		fireStore.collection("Rating").document(transporterId).collection("Rating").document(leadId).set(rating);
+		return rating;
+	}
+	
+	//get Rating by TransporterId
+	public ArrayList<Rating> getTransporterRating(String transporterId) throws InterruptedException, ExecutionException{
+		Firestore fireStore = FirestoreClient.getFirestore();
+		ArrayList<Rating> ratingList = new ArrayList<>();
+		List<QueryDocumentSnapshot> list = fireStore.collection("Rating").document(transporterId).collection("Rating").get().get().getDocuments();	
+		for(QueryDocumentSnapshot queryDocument : list ) {
+			ratingList.add(queryDocument.toObject(Rating.class));
 		}
-		
+		return ratingList;
+	}
+	// get number of rating's and number of persons
+	public ArrayList<Integer> getNumberOfRating(String transporterId) throws InterruptedException, ExecutionException{
+		Firestore fireStore = FirestoreClient.getFirestore();
+		ArrayList<Integer> al = new ArrayList<>();
+		List<QueryDocumentSnapshot> list = fireStore.collection("Rating").document(transporterId).collection("Rating").get().get().getDocuments();	
+		Integer totalRating = 0;
+		al.add(list.size());
+		for(QueryDocumentSnapshot queryDocument : list ) {
+			Rating rating = queryDocument.toObject(Rating.class);
+			int r = Integer.parseInt(rating.getRating());
+			totalRating+=r;
+		}
+		al.add(totalRating);
+		return al;
+	}
+	
 	
 }

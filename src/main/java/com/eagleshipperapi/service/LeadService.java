@@ -59,7 +59,6 @@ public class LeadService {
 	//get single lead by id
 		public Lead getLeadByLeadId(String leadId) throws InterruptedException, ExecutionException, ResourceNotFoundException {
 			Firestore dbFirestore = FirestoreClient.getFirestore();
-			
 			Lead lead =  dbFirestore.collection(TAG).document(leadId).get().get().toObject(Lead.class);
 		    return lead;
 		}
@@ -67,7 +66,6 @@ public class LeadService {
 	//get Created Load by userId
 		public ArrayList<Lead> getCreatedLeadById(String userId) throws Exception, Exception{
 			Firestore dbFirestore = FirestoreClient.getFirestore();
-			
 			ArrayList<Lead> al = new ArrayList<>();
 			List<QueryDocumentSnapshot>document = dbFirestore.collection(TAG).whereEqualTo("userId", userId).get().get().getDocuments();
 			for(QueryDocumentSnapshot queryDocument : document ) {
@@ -82,7 +80,6 @@ public class LeadService {
 	//get Confirmed Load by userId	
 		public ArrayList<Lead> getConfirmedLeadById(String userId) throws Exception, Exception{
 			Firestore dbFirestore = FirestoreClient.getFirestore();
-			
 			ArrayList<Lead> al = new ArrayList<>();
 			List<QueryDocumentSnapshot>document = dbFirestore.collection(TAG).whereEqualTo("userId", userId).get().get().getDocuments();
 			for(QueryDocumentSnapshot queryDocument : document ) {
@@ -97,7 +94,6 @@ public class LeadService {
 	//get Completed Load By userId	
 		public ArrayList<Lead> getCompletedLeadById(String userId) throws Exception, Exception{
 			Firestore dbFirestore = FirestoreClient.getFirestore();
-			
 			ArrayList<Lead> al = new ArrayList<>();
 			List<QueryDocumentSnapshot>document = dbFirestore.collection(TAG).whereEqualTo("userId", userId).get().get().getDocuments();
 			for(QueryDocumentSnapshot queryDocument : document ) {
@@ -112,7 +108,6 @@ public class LeadService {
 	//get Completed load By TransporterId
 		public ArrayList<Lead> getCompletedLeadByTransporterId(String transporterID) throws Exception, Exception{
 			Firestore dbFirestore = FirestoreClient.getFirestore();
-			
 			ArrayList<Lead> al = new ArrayList<>();
 			List<QueryDocumentSnapshot>document = dbFirestore.collection(TAG).whereEqualTo("dealLockedWith", transporterID).get().get().getDocuments();
 			for(QueryDocumentSnapshot queryDocument : document ) {
@@ -127,7 +122,6 @@ public class LeadService {
 	//get Confirm Lead Of All User match With Transporter Id Lead
 		public ArrayList<Lead> getAllConfirmedLeadsOfUser(String transporterId) throws InterruptedException, ExecutionException{
 			Firestore dbFirestore = FirestoreClient.getFirestore();
-			
 			ArrayList<Lead> leadList = new ArrayList<>();
 			List<QueryDocumentSnapshot> document = dbFirestore.collection(TAG).whereEqualTo("dealLockedWith", transporterId).get().get().getDocuments();
 			for(QueryDocumentSnapshot ds : document) {
@@ -143,9 +137,7 @@ public class LeadService {
 	// update lead by LeadId
 		public Lead updateLeadByLeadId(String leadId,Lead lead) throws InterruptedException, ExecutionException {
 			Firestore dbFirestore = FirestoreClient.getFirestore();
-			
 			Lead l = dbFirestore.collection(TAG).document(leadId).get().get().toObject(Lead.class);
-			
 			if(lead.getBidCount()!=0)
 				l.setBidCount(lead.getBidCount());
 			
@@ -190,7 +182,6 @@ public class LeadService {
 		//get Filterd data
 		public ArrayList<Lead> getFilteredLeads(String transporterId ,ArrayList<States> stateList) throws InterruptedException, ExecutionException{
 			Firestore dbFirestore = FirestoreClient.getFirestore();
-			
 			ArrayList<Lead> al = new ArrayList<>();
 			boolean status = false;
 			List<QueryDocumentSnapshot> query = dbFirestore.collection(TAG).get().get().getDocuments();
@@ -235,7 +226,7 @@ public class LeadService {
 			DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 			try {
 				Date date = (Date)formatter.parse(str_date);
-				if(lead.getTimestamp() <= date.getTime()) {
+				if(t >= date.getTime()) {
 					dbFirestore.collection(TAG).document(lead.getLeadId()).delete();				
 				}
 			} catch (ParseException e) {
@@ -257,7 +248,6 @@ public class LeadService {
 			}
 			status = false;
 		}
-		
 		Collections.sort(al,new Lead());
 		return al;
 	}
@@ -265,7 +255,6 @@ public class LeadService {
 	//delete lead by leadId
 		public Lead deleteLeadByLeadId(String leadId) throws InterruptedException, ExecutionException, ResourceNotFoundException {
 			Firestore dbFirestore = FirestoreClient.getFirestore();
-			
 			Lead lead =  dbFirestore.collection(TAG).document(leadId).get().get().toObject(Lead.class);
 			dbFirestore.collection(TAG).document(leadId).delete();
 		    return lead;
