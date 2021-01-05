@@ -15,11 +15,11 @@ public class FirbaseIntialize {
 	@PostConstruct
     public void initialize() {
         try {
-            InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("serviceAccountKey.json");
+            InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("./serviceAccountKey.json");
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://eagleshippers-f384c.firebaseio.com")
-                    .setStorageBucket("eagleshippers-f384c.appspot.com")
+                    .setDatabaseUrl("https://testbackendapi-d9487.firebaseio.com")
+                    .setStorageBucket("testbackendapi-d9487.appspot.com")
                     .build();
             if(FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);

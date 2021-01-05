@@ -20,12 +20,12 @@ public class FileUtility {
 
 	public String getImageUrl(MultipartFile file) throws IOException {
 		InputStream serviceAccount = this.getClass().getClassLoader().getResourceAsStream("./serviceAccountKey.json");
-		Storage storage = StorageOptions.newBuilder().setProjectId("eagleshippers-f384c")
+		Storage storage = StorageOptions.newBuilder().setProjectId("testbackendapi-d9487")
 			.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build().getService();
 		HashMap<String, String> hm = new HashMap<>();
    	    hm.put("firebaseStorageDownloadTokens", "3434434343434dfdf");
   
-   	    BlobId blobId = BlobId.of("eagleshippers-f384c.appspot.com",file.getOriginalFilename());
+   	    BlobId blobId = BlobId.of("testbackendapi-d9487.appspot.com",file.getOriginalFilename());
 		     
 		BlobInfo blobInfo = BlobInfo.newBuilder(blobId).
 		    		setContentType("image/jpeg")
@@ -38,7 +38,7 @@ public class FileUtility {
         fos.close();
         @SuppressWarnings("unused")
 		Blob blob = storage.create(blobInfo, Files.readAllBytes(convertedFile.toPath()));
-	    String imageUrl = "https://firebasestorage.googleapis.com/v0/b/eagleshippers-f384c.appspot.com/o/"+convertedFile+"?alt=media&token=3434434343434dfdf";
+	    String imageUrl = "https://firebasestorage.googleapis.com/v0/b/testbackendapi-d9487.appspot.com/o/"+convertedFile+"?alt=media&token=3434434343434dfdf";
 	    return imageUrl;
 	}
 }
